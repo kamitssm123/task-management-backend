@@ -63,7 +63,7 @@ blackListTokenTable();
 app.use(cors());
 app.use(express.json());
 
-app.use('/auth', authRoutes);
+app.use('/', authRoutes);
 
 app.listen(PORT, () => {
     console.log(`User Service listening on port ${PORT}`);

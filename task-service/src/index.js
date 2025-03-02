@@ -49,7 +49,7 @@ createTable();
 app.use(cors());
 app.use(express.json());
 
-app.use('/tasks', taskRoutes);
+app.use('/', taskRoutes);
 
 app.listen(PORT, () => {
     console.log(`Task Service listening on port ${PORT}`);
