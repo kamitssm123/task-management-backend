@@ -181,7 +181,8 @@ export const updateTask = async (req, res) => {
     try {
       const { id } = req.params;
       const { title, priority, status, start_time, end_time } = req.body;
-      const user_id = req.user;
+      const user_id = req.user.id;
+      
 
       const task = await Task.findOne({
         where: {
@@ -193,18 +194,20 @@ export const updateTask = async (req, res) => {
         return res.status(404).send({ message: `Task with ID ${id} not found` });
       }
 
-      if (task.user_id !== user.id) {
+      if (task.user_id !==user_id) {
         return res.status(403).send({ message: 'You are not authorized to update this task' });
       }
-
-      task.title = title || task.title;
-      task.priority = priority || task.priority;
-      task.status = status || task.status;
-      task.start_time = start_time || task.start_time;
-      task.end_time = end_time || task.end_time;
-
-      await task.save();
-      res.status(200).send(task);
+      const [updatedRowsCount, updatedRows] = await Task.update(
+        { title, priority, status, start_time, end_time },
+        {
+          where: { id: id, user_id: user_id },
+          returning: true // PostgreSQL only; will return updated rows
+        }
+      );
+      if (updatedRowsCount === 0) {
+        return res.status(404).send({ message: `Task with ID ${id} not found` });
+      }
+      res.status(200).send(updatedRows[0]);
     } catch (error) {
       res.status(500).send({ message: 'Error updating task', error });
     }
@@ -213,7 +216,7 @@ export const updateTask = async (req, res) => {
 
 export const deleteTasks = async (req, res) => {
     try {
-      const { ids } = req.body; // Expecting an array of task IDs
+      const ids = req.body;
       const user_id = req.user.id;
   
       if (!Array.isArray(ids) || ids.length === 0) {
@@ -232,7 +235,7 @@ export const deleteTasks = async (req, res) => {
         return res.status(404).send({ message: "No tasks found or unauthorized request." });
       }
   
-      res.status(200).send({ message: `Deleted ${deletedCount} task(s) successfully`, deletedIds: ids });
+      res.status(200).send(ids);
     } catch (error) {
       console.error("Error deleting tasks:", error);
       res.status(500).send({ message: "Error deleting tasks", error });
