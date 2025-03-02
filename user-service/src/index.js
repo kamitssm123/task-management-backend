@@ -2,14 +2,14 @@ import express from 'express';
 import { Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes.js'
+import { sequelize } from './models/User.js';
 
 import cors from "cors";
 
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
-
-const sequelize = new Sequelize(process.env.DATABASE_URL);
+  
 
 async function checkConnection() {
     try {

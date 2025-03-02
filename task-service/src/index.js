@@ -3,14 +3,13 @@ import { Sequelize } from 'sequelize';
 import taskRoutes from './routes/taskRoutes.js';
 import dotenv from 'dotenv';
 import cors from 'cors'
+import { sequelize } from './models/Task.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3002;
-
-const sequelize = new Sequelize(process.env.DATABASE_URL);
-// const sequelize = new Sequelize('postgres://user:password@db:5432/db');
+  
 
 async function checkConnection() {
     try {
