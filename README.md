@@ -88,3 +88,15 @@ Each microservice needs to be started separately. Follow these steps to run them
 cd api-gateway
 npm install
 node src/index.js
+
+### **1. Start User Service**
+```bash
+cd user-service
+npm install
+node src/index.js
+
+### **1. Start Task Service**
+```bash
+cd task-service
+npm install
+node src/index.js
