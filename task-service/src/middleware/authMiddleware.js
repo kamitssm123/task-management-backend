@@ -8,7 +8,6 @@ dotenv.config();
 export const authenticateJWT = async (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
-  console.log("Token is ", token)
   const [blacklistedToken] = await sequelize.query(
     'SELECT token FROM blacklisted_tokens WHERE token = :token',
     { replacements: { token }, type: sequelize.QueryTypes.SELECT }
